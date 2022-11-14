@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+mv "$HOME/.zshrc" "$HOME/.zshrc.orig" 2>/dev/null
+ln -sf "$(pwd)/dot_zshrc" "$HOME/.zshrc"

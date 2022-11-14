@@ -1,0 +1,174 @@
+#!/usr/bin/env zsh
+
+# Set up the prompt
+autoload -Uz promptinit
+promptinit
+
+setopt histignorealldups sharehistory
+
+# Use emacs keybindings even if our EDITOR is set to vi
+bindkey -e
+
+# Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
+HISTSIZE=10000
+SAVEHIST=10000
+HISTFILE=~/.zsh_history
+
+# Use modern completion system
+autoload -Uz compinit
+compinit
+
+zstyle ':completion:*' menu select
+zstyle ':completion:*' auto-description 'specify: %d'
+zstyle ':completion:*' completer _expand _complete _correct _approximate
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' list-colors ''
+zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
+zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=* l:|=*'
+zstyle ':completion:*' select-prompt %SScrolling active: current selection at %p%s
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' verbose true
+
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
+zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
+
+# Check if antigen is installed. If not, download the script.
+if [ ! -f "$HOME/.zsh/antigen.zsh" ]; then
+	mkdir -p "$HOME/.zsh"
+	curl -L git.io/antigen > "$HOME/.zsh/antigen.zsh"
+	clear
+fi
+
+# Aliases
+# Check if exa is installed
+if command -v exa &>/dev/null; then
+	alias ls='exa --icons'
+	alias la='exa --icons -a'
+	alias ll='exa --icons -l'
+	alias lla='exa --icons -la'
+	alias _ls='/usr/bin/ls --color=auto'
+else
+	alias ls='ls --color=auto'
+	alias ll='ls -AlF'
+	alias la='ls -A'
+	alias lla='ls -lFA'
+fi
+
+OS="$(uname)"
+
+# OS specific stuff
+case "$OS" in
+	'Darwin')
+		# macOS stuff here
+		;;
+	'Linux')
+		eval "$(dircolors -b)"
+
+		DISTRO="$(cat /etc/os-release 2>/dev/null | grep -e '^NAME=')"
+
+		if [[ "${DISTRO}" =~ "Arch Linux" ]]; then
+			alias update='yay -Syu --noconfirm'
+			alias ins='sudo pacman -S'
+			alias rem='sudo pacman -Rns'
+			alias yins='yay -S'
+			alias yrem='yay -Rns'
+		elif [[ "${DISTRO}" =~ "Ubuntu" ]]; then
+			alias update='sudo apt update -y; sudo apt upgrade -y; sudo apt autoremove --purge -y'
+			alias ins='sudo apt install'
+			alias rem='sudo apt autoremove --purge'
+		fi
+		;;
+esac
+
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias v='vim'
+alias ga='git add'
+alias gd='git diff'
+alias gs='git status -s'
+alias gc='git commit -m'
+alias gcz='git cz'
+alias gl="git log --oneline"
+alias gf='git fetch'
+alias gclo='git clone'
+alias gcln='git clean -dfx'
+alias gp='git push'
+alias gri='git rebase -i'
+alias ncu='npx npm-check-updates -u'
+
+GLOBALIAS_FILTER_VALUES=(ls la ll lla z)
+
+# Colored man pages
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;47;34m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+export LESS=-r
+
+# Editor
+export EDITOR="vim"
+
+# Fix shell bindings
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
+bindkey  "^[[H"		beginning-of-line
+bindkey  "^[[F"		end-of-line
+bindkey  "^[[3~"	delete-char
+
+
+# Plugins
+source "$HOME/.zsh/antigen.zsh"
+
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle globalias
+antigen bundle command-not-found
+antigen bundle shrink-path
+antigen bundle agkozak/zsh-z
+antigen bundle trystan2k/zsh-tab-title
+
+antigen apply
+
+# Git
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git*' formats "%b "
+
+# Setup prompt
+setopt prompt_subst
+
+precmd() {
+	vcs_info
+	
+	PROMPT="%F{cyan}$(shrink_path -f) "
+
+	if [[ -n ${vcs_info_msg_0_} ]]; then
+		local gs=$(env LC_ALL=C git status 2>/dev/null)
+		local color=''
+
+		if [[ -n ${gs} ]]; then
+			if [[ ! ${gs} =~ "working tree clean" ]]; then
+				color="%F{red}"
+			elif [[ ${gs} =~ "Your branch is ahead of" ]]; then
+				color="%F{yellow}"
+			elif [[ ${gs} =~ "nothing to commit" ]]; then
+				color="%F{green}"
+			fi
+		fi
+
+		PROMPT+="${color}${vcs_info_msg_0_}"
+	fi
+
+	PROMPT+="%F{magenta}❯%f "
+}
+
+alias ytmp3="yt-dlp -f 'ba' -x --audio-format mp3"
+
+export PATH=$HOME/.fnm:$HOME/.local/share/bin:/snap/bin:$PATH
+
+# fnm init
+eval "$(fnm env --use-on-cd)"
