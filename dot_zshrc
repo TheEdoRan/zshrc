@@ -67,13 +67,11 @@ case "$OS" in
 		DISTRO="$(cat /etc/os-release 2>/dev/null | grep -e '^NAME=')"
 
 		if [[ "${DISTRO}" =~ "Arch Linux" ]]; then
-			alias update='yay -Syu --noconfirm'
 			alias ins='sudo pacman -S'
 			alias rem='sudo pacman -Rns'
 			alias yins='yay -S'
 			alias yrem='yay -Rns'
 		elif [[ "${DISTRO}" =~ "Ubuntu" ]]; then
-			alias update='sudo apt update -y; sudo apt upgrade -y; sudo apt autoremove --purge -y'
 			alias ins='sudo apt install'
 			alias rem='sudo apt autoremove --purge'
 		fi
@@ -84,6 +82,7 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias v='vim'
+alias update='topgrade'
 alias ga='git add'
 alias gd='git diff'
 alias gs='git status -s'
