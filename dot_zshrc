@@ -96,6 +96,7 @@ alias gcln='git clean -dfx'
 alias gp='git push'
 alias gri='git rebase -i'
 alias ncu='npx npm-check-updates -u'
+alias ytmp3="yt-dlp -f 'ba' -x --audio-format mp3"
 
 GLOBALIAS_FILTER_VALUES=(ls la ll lla z)
 
@@ -166,7 +167,6 @@ precmd() {
 	PROMPT+="%F{magenta}❯%f "
 }
 
-alias ytmp3="yt-dlp -f 'ba' -x --audio-format mp3"
 
 export PATH=$HOME/.local/share/bin:/snap/bin:$PATH
 
@@ -199,5 +199,3 @@ load-nvmrc() {
 }
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
-
-
