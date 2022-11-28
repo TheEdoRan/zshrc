@@ -170,6 +170,11 @@ alias ytmp3="yt-dlp -f 'ba' -x --audio-format mp3"
 
 export PATH=$HOME/.local/share/bin:/snap/bin:$PATH
 
+# Check if nvm is installed, if not, install it.
+[ ! -d "$HOME"/.nvm ] \
+	&& echo "NVM not found! Installing it..." \
+	&& curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+
 # nvm stuff
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
@@ -194,3 +199,5 @@ load-nvmrc() {
 }
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+
+
