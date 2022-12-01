@@ -32,7 +32,7 @@ zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
-# Check if antigen is installed. If not, download the script.
+# Check if antigen is installed. If not, download the script
 if [ ! -f "$HOME/.zsh/antigen.zsh" ]; then
 	mkdir -p "$HOME/.zsh"
 	curl -L git.io/antigen > "$HOME/.zsh/antigen.zsh"
