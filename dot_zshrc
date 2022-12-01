@@ -72,6 +72,7 @@ case "$OS" in
 			alias yins='yay -S'
 			alias yrem='yay -Rns'
 		elif [[ "${DISTRO}" =~ "Ubuntu" ]]; then
+			alias update='sudo apt update -y; sudo apt upgrade -y; sudo apt autoremove -y; npm update -g; echo -e "\nDone!"'
 			alias ins='sudo apt install'
 			alias rem='sudo apt autoremove --purge'
 		fi
@@ -82,7 +83,6 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias v='vim'
-alias update='topgrade'
 alias ga='git add'
 alias gd='git diff'
 alias gs='git status -s'
