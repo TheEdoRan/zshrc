@@ -177,7 +177,3 @@ export PATH=$HOME/.local/share/fnm:$HOME/.local/share/bin:/snap/bin:$PATH
 
 # fnm init
 eval "$(fnm env --use-on-cd)"
-
-# fnm
-export PATH="/home/theedoran/.local/share/fnm:$PATH"
-eval "`fnm env`"
