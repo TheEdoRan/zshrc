@@ -39,6 +39,11 @@ if [ ! -f "$HOME/.zsh/antigen.zsh" ]; then
 	clear
 fi
 
+# Check if fnm is installed, if not, install it
+[ ! -d "$HOME"/.local/share/fnm ] \
+	&& echo "fnm not found! Installing it..." \
+	&& curl -fsSL https://fnm.vercel.app/install | bash
+
 # Aliases
 # Check if exa is installed
 if command -v exa &>/dev/null; then
@@ -120,6 +125,8 @@ bindkey  "^[[H"		beginning-of-line
 bindkey  "^[[F"		end-of-line
 bindkey  "^[[3~"	delete-char
 
+# Configure path
+export PATH=$HOME/.local/share/fnm:$HOME/.local/share/bin:/snap/bin:$PATH
 
 # Plugins
 source "$HOME/.zsh/antigen.zsh"
@@ -166,14 +173,6 @@ precmd() {
 
 	PROMPT+="%F{magenta}❯%f "
 }
-
-# Check if fnm is installed, if not, install it
-[ ! -d "$HOME"/.local/share/fnm ] \
-	&& echo "fnm not found! Installing it..." \
-	&& curl -fsSL https://fnm.vercel.app/install | bash
-
-# Configure path
-export PATH=$HOME/.local/share/fnm:$HOME/.local/share/bin:/snap/bin:$PATH
 
 # fnm init
 eval "$(fnm env --use-on-cd)"
