@@ -72,6 +72,7 @@ case "$OS" in
 		DISTRO="$(cat /etc/os-release 2>/dev/null | grep -e '^NAME=')"
 
 		if [[ "${DISTRO}" =~ "Arch Linux" ]]; then
+			alias update='sudo pacman -Syu --noconfirm; yay -Syua --noconfirm; npm update -g; echo -e "\nDone!"'
 			alias ins='sudo pacman -S'
 			alias rem='sudo pacman -Rns'
 			alias yins='yay -S'
@@ -102,6 +103,7 @@ alias gp='git push'
 alias gri='git rebase -i'
 alias ncu='npx npm-check-updates -u'
 alias ytmp3="yt-dlp -f 'ba' -x --audio-format mp3"
+alias rndstr="openssl rand -hex 32"
 
 GLOBALIAS_FILTER_VALUES=(ls la ll lla z)
 
